@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ReceptionApp.Data;
 using ReceptionApp.Models;
+using ReceptionApp.Repositories;
 
 namespace ReceptionApp.Controllers
 {
@@ -15,31 +16,31 @@ namespace ReceptionApp.Controllers
     public class ReceptsController : ControllerBase
     {
         private readonly ReceptionAppDbContext _context;
+        private readonly IReceptionRepository receptionRepository;
 
-        public ReceptsController(ReceptionAppDbContext context)
+        public ReceptsController(IReceptionRepository receptionRepository)
         {
-            _context = context;
+            this.receptionRepository = receptionRepository;
         }
 
         // GET: api/Recepts
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Recept>>> GetReceptions()
+        public async Task<IEnumerable<Recept>> GetReceptions()
         {
-            return await _context.Receptions.ToListAsync();
+            return await receptionRepository.GetAllRecept();
         }
 
         // GET: api/Recepts/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Recept>> GetRecept(int id)
         {
-            var recept = await _context.Receptions.FindAsync(id);
+            var recept = await receptionRepository.GetSingleRecept(id);
 
-            if (recept == null)
+            if(recept == null)
             {
                 return NotFound();
             }
-
-            return recept;
+            return Ok(recept);
         }
 
         // PUT: api/Recepts/5
@@ -52,24 +53,7 @@ namespace ReceptionApp.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(recept).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ReceptExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
+            await receptionRepository.UpdateRecept(recept);
             return NoContent();
         }
 
@@ -78,8 +62,7 @@ namespace ReceptionApp.Controllers
         [HttpPost]
         public async Task<ActionResult<Recept>> PostRecept(Recept recept)
         {
-            _context.Receptions.Add(recept);
-            await _context.SaveChangesAsync();
+            await receptionRepository.CreateRecept(recept);
 
             return CreatedAtAction("GetRecept", new { id = recept.Id }, recept);
         }
@@ -88,21 +71,10 @@ namespace ReceptionApp.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRecept(int id)
         {
-            var recept = await _context.Receptions.FindAsync(id);
-            if (recept == null)
-            {
-                return NotFound();
-            }
+            await receptionRepository.DeleteRecept(id);
 
-            _context.Receptions.Remove(recept);
-            await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        private bool ReceptExists(int id)
-        {
-            return _context.Receptions.Any(e => e.Id == id);
         }
     }
 }

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ReceptionApp.Data;
+using ReceptionApp.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +12,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<ReceptionAppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ReceptionConnectionStr")));
-
+builder.Services.AddScoped<IReceptionRepository, ReceptRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
