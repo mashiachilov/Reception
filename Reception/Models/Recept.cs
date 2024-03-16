@@ -9,7 +9,7 @@ namespace ReceptionApp.Models
         [Required(ErrorMessage = "Name is required")]
         public string Name { get; set; }
 
-        [Required(ErrorMessage = "Purpose is required")]
+        [Required(ErrorMessage = "Description is required")]
         [StringLength(255, ErrorMessage = "Purpose cannot exceed 255 characters")]
         public string Description { get; set; }
 

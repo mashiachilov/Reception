@@ -72,8 +72,6 @@ namespace ReceptionApp.Controllers
         public async Task<IActionResult> DeleteRecept(int id)
         {
             await receptionRepository.DeleteRecept(id);
-
-
             return NoContent();
         }
     }
