@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ReceptionApp.Models
 {
@@ -20,18 +21,20 @@ namespace ReceptionApp.Models
         [StringLength(100, ErrorMessage = "Email cannot exceed 100 characters")]
         public string Email { get; set; }
 
-        [RegularExpression(@"^\+?(\d[\d-. ]+)?(\([\d-. ]+\))?[\d-. ]+\d$", ErrorMessage = "Invalid phone number")]
         [StringLength(20, ErrorMessage = "Phone number cannot exceed 20 characters")]
         [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "Arrival date is required")]
-        [DataType(DataType.Date)]
-        [Display(Name = "Arrival Date")]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime ArrivalDate { get; set; }
 
         [StringLength(255, ErrorMessage = "Notes cannot exceed 255 characters")]
         public string? Notes { get; set; }
+
+        public int? ReceptId { get; set; }
+
+        [ForeignKey("ReceptId")]
+        public Recept? Recept { get; set; }
+
     }
 }

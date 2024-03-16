@@ -79,8 +79,7 @@ namespace ReceptionApp.Controllers
         public async Task<ActionResult<Visitor>> CreateVisitor(Visitor visitor)
         {
             await _vsitorRepository.CreateVisitor(visitor);
-
-            return CreatedAtAction("GetVisitors", new { id = visitor.Id }, visitor);
+            return CreatedAtAction("GetAllVisitor", new { id = visitor.Id }, visitor);
         }
 
         // DELETE: api/Visitors/5

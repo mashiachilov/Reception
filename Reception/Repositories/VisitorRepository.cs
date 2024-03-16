@@ -26,12 +26,12 @@ namespace ReceptionApp.Repositories
 
         public async Task<Visitor> GetSingleVisitor(int id)
         {
-            return await DbContext.Visitors.FirstOrDefaultAsync(v => v.Id == id);
+            return await DbContext.Visitors.Include(v => v.Recept).FirstOrDefaultAsync(v => v.Id == id);
         }
 
         public async Task<IEnumerable<Visitor>> GetAllVisitor()
         {
-            return await DbContext.Visitors.ToListAsync();
+            return await DbContext.Visitors.Include(v =>v.Recept).ToListAsync();
         }
 
         public async Task CreateVisitor(Visitor visitor)
