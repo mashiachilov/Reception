@@ -13,7 +13,10 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<ReceptionAppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ReceptionConnectionStr")));
 builder.Services.AddScoped<IReceptionRepository, ReceptRepository>();
+builder.Services.AddScoped<IVsitorRepository, VisitorRepository>();
+
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
