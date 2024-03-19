@@ -12,6 +12,16 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<ReceptionAppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ReceptionConnectionStr")));
+
+var allowedOrigins = "";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: allowedOrigins, policy =>
+    {
+        policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+    });
+});
+
 builder.Services.AddScoped<IReceptionRepository, ReceptRepository>();
 builder.Services.AddScoped<IVsitorRepository, VisitorRepository>();
 
@@ -30,5 +40,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseCors(allowedOrigins);
 
 app.Run();
